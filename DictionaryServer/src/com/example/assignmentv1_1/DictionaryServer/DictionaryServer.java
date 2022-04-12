@@ -77,7 +77,7 @@ public class DictionaryServer {
             DataInputStream input = new DataInputStream(clientSocket.getInputStream());
             // Output Stream
             DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
-            String outcome = null;
+            String outcome;
             String Operation = input.readUTF();
             if (Operation.equals("Connection Detection")) {
                 output.writeUTF("Success");
@@ -120,7 +120,7 @@ public class DictionaryServer {
                     break;
 
                 default://其它一律认为为连接检测
-                    outcome= "Connection Success";
+                    outcome = "Connection Success";
                     System.out.println("New Connection Detected");
             }
 
