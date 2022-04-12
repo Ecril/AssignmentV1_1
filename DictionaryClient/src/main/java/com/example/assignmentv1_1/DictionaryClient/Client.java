@@ -1,4 +1,4 @@
-package DictionaryClient;
+package com.example.assignmentv1_1.DictionaryClient;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -14,7 +14,7 @@ public class Client {
 
     public static void main(String[] args) {
 
-        try (Socket socket = new Socket(ip, port);) {
+        try (Socket socket = new Socket(ip, port)) {
             // Output and Input Stream
             DataInputStream input = new DataInputStream(socket.getInputStream());
 
@@ -32,7 +32,6 @@ public class Client {
                     String message = input.readUTF();
                     System.out.println(message);
                     flag = false;
-                    ;
                 }
             }
 

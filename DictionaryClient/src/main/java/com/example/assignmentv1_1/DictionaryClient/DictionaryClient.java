@@ -1,4 +1,4 @@
-package DictionaryClient;
+package com.example.assignmentv1_1.DictionaryClient;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 public class DictionaryClient {
     public static int Port = 3005;
@@ -28,28 +29,28 @@ public class DictionaryClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String Op = (String) OPlist.getSelectedItem();
-                if (Op == "Search") {
+                if (Objects.equals(Op, "Search")) {
                     OpIndex = 0;
                     System.out.println("Given OP = Search");
                     SearchOrRemoveDialog D1 = new SearchOrRemoveDialog(OpIndex);
                     D1.setSize(400, 250);
                     D1.setVisible(true);
 
-                } else if (Op == "Remove") {
+                } else if (Objects.equals(Op, "Remove")) {
                     OpIndex = 1;
                     System.out.println("Given OP = Remove");
                     SearchOrRemoveDialog D2 = new SearchOrRemoveDialog(OpIndex);
                     D2.setSize(400, 250);
                     D2.setVisible(true);
 
-                } else if (Op == "Update") {
+                } else if (Objects.equals(Op, "Update")) {
                     OpIndex = 2;
                     System.out.println("Given OP = Update");
                     UpdateOrAddDialog D3 = new UpdateOrAddDialog(OpIndex);
                     D3.setSize(400, 250);
                     D3.setVisible(true);
 
-                } else if (Op == "Add") {
+                } else if (Objects.equals(Op, "Add")) {
                     OpIndex = 3;
                     System.out.println("Given OP = Add");
                     UpdateOrAddDialog D4 = new UpdateOrAddDialog(OpIndex);
@@ -71,7 +72,7 @@ public class DictionaryClient {
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("DictionaryClient");
+        JFrame frame = new JFrame("com/example/assignmentv1_1/DictionaryClient");
         frame.setContentPane(new DictionaryClient().TestForm);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
