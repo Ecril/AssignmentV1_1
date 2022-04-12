@@ -20,26 +20,55 @@ public class DictionaryServer {
         //定义一个file
         File file = null;
         try {
-            if (args.length == 2) {
-                //解析端口号 第一个参数不是数字会抛NumberFormatException
-                port = Integer.parseInt(args[0]);
-                //判断端口是否在1-65535之间，不在的话抛IllegalArgumentException
-                if (port > 65535 || port < 1) {
-                    throw new IllegalArgumentException();
-                }
-                Filepath = args[1];
+            //根据参数列表长度选定。无参数时默认3005端口启动，用同目录下的dict.txt做字典文件
+            // 1参数时，识别输入参数是端口号还是字典文件。
+            int i = args.length;
+            switch (i) {
+                case 1:
+                    //假定参数0为端口号
+                    try {
+                        int PotentialPort = Integer.parseInt(args[0]);
+                        if (PotentialPort > 65535 || PotentialPort < 1) {
+                            throw new NumberFormatException();//端口号不合法，抛NumberFormatException，保持默认端口号
+                        } else {
+                            port = PotentialPort;//输入的端口号合法，修改静态端口号
+                        }
+                    } catch (NumberFormatException e) {
+                        //如果抛了NumberFormatException说明不是合法端口号，视为文件路径进行尝试
+                        file = new File(args[0]);
+                        if ((file.exists() && file.isFile())) {
+                            Filepath = args[0];//文件路径合法则修改静态Filepath
+                        } else {
+                            //如果输入的单个参数既不是端口号也不是文件，往上继续抛Exception
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    //最后记得打开文件
+                    file = new File(Filepath);
+                    //最好break
+                    break;
+                case 2:
+                    //解析端口号 第一个参数不是数字会抛NumberFormatException
+                    port = Integer.parseInt(args[0]);
+                    //判断参数0代表的端口是否在1-65535之间，不在的话也抛NumberFormatException
+                    if (port > 65535 || port < 1) {
+                        throw new NumberFormatException();
+                    }
+                    //把参数1定位文件路径,不break，进入下一步default
+                    Filepath = args[1];
+                default:
+                    //其它情况用默认参数启动
+                    file = new File(Filepath);
+                    //判断文件是否存在，不存在手工抛 SecurityException，统一处理
+                    if (!(file.exists() && file.isFile())) {
+                        throw new SecurityException();
+                    }
             }
-            file = new File(Filepath);
-            //判断文件是否存在，不存在手工抛 SecurityException 有点多余
-            if (!(file.exists() && file.isFile())) {
-                throw new SecurityException();
-            }
-
         } catch (NumberFormatException e) {
-            System.out.println("Wrong Port Number");
+            System.out.println("Illegal Port Number, it must be an Integer between 1-65535");
             System.exit(0);
         } catch (IllegalArgumentException e) {
-            System.out.println("Illegal Port Number, Must between 1-65535");
+            System.out.println("Illegal Argument, Please input 0-2 legal arguments");
             System.exit(0);
         } catch (SecurityException e) {
             System.out.println("Illegal Dictionary File");
