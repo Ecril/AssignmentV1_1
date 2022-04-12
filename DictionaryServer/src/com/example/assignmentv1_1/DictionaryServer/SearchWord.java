@@ -1,11 +1,11 @@
-package com.example.assignmentv1_1;
+package com.example.assignmentv1_1.DictionaryServer;
 
 
 
 import java.io.*;
 
 public class SearchWord {
-    public static String filepath=".\\src\\dict.txt";
+    public static String filepath=".\\dict.txt";
     public static String LookItUp(String wd) {
         try {
             String encoding = "UTF-8"; //For a universal coding usage

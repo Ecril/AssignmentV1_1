@@ -1,21 +1,22 @@
-package com.example.assignmentv1_1;
+package DictionaryClient;
+
+import javax.swing.*;
+import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.swing.*;
-import java.awt.event.*;
 
 public class UpdateOrAddDialog extends JDialog {
+    private static String ip = DictionaryClient.Ip;
+    private static int port = DictionaryClient.Port;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField TFWord;
     private JTextField TFMeaning;
     private JTextArea FromServer;
-    private static String ip = "localhost";
-    private static int port = 3005;
 
     public UpdateOrAddDialog(int OP, int Port, String address) { //Constructor with port and address
         setContentPane(contentPane);
@@ -101,51 +102,52 @@ public class UpdateOrAddDialog extends JDialog {
 
     }
 
+    public static void main(String[] args) {
+
+        UpdateOrAddDialog dialog = new UpdateOrAddDialog();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
     private void onOK(int OP) {// 在此处添加您的代码
         // IP and port
-        try(Socket socket = new Socket(ip, port);)
-        {
+        try (Socket socket = new Socket(ip, port);) {
             // Output and Input Stream
             DataInputStream input = new DataInputStream(socket.getInputStream());
 
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-            String op=null;
-            if(OP==2){
-                op="OP2: ";
-            }else if(OP==3){
-                op="OP3: ";
+            String op = null;
+            if (OP == 2) {
+                op = "OP2: ";
+            } else if (OP == 3) {
+                op = "OP3: ";
             }//
-            String wd=TFWord.getText();
-            String mn="-"+TFMeaning.getText();
-            String sendData =op+wd+mn;
+            String wd = TFWord.getText();
+            String mn = "-" + TFMeaning.getText();
+            String sendData = op + wd + mn;
 
             output.writeUTF(sendData);
             System.out.println("Data sent to DictionaryServer--> " + sendData);
             output.flush();
 
-            boolean flag=true;
-            while(flag)
-            {
-                if(input.available()>0) {
+            boolean flag = true;
+            while (flag) {
+                if (input.available() > 0) {
                     String message = input.readUTF();
                     FromServer.setText(message);
                     System.out.println(message);
-                    flag= false;;
+                    flag = false;
+                    ;
                 }
             }
 
 
-        }
-        catch (UnknownHostException e)
-        {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-
 
 
         //dispose();
@@ -154,13 +156,5 @@ public class UpdateOrAddDialog extends JDialog {
     private void onCancel() {
         // 必要时在此处添加您的代码
         dispose();
-    }
-
-    public static void main(String[] args) {
-
-        UpdateOrAddDialog dialog = new UpdateOrAddDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 }
