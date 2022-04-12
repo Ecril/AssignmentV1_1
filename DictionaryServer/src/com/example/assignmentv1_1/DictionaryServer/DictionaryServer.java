@@ -71,7 +71,7 @@ public class DictionaryServer {
             System.out.println("Illegal Argument, Please input 0-2 legal arguments");
             System.exit(0);
         } catch (SecurityException e) {
-            System.out.println("Illegal Dictionary File");
+            System.out.println("Unable to access the Dictionary File");
             System.exit(0);
         }
 
