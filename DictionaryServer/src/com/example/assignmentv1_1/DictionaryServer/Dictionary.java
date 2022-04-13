@@ -36,8 +36,8 @@ public class Dictionary {
         //删除成功则返回原meaning，删除失败则为null
         return DicFile.remove(word);
     }
-
-    public static void SavetoFile(String filepath) throws IOException {
+    //同步写入文件
+    public static synchronized void SavetoFile(String filepath) throws IOException {
         //将hashmap中的数据存入文件
         File file = new File(filepath);
         FileWriter out = new FileWriter(file, StandardCharsets.UTF_8, false);
@@ -52,23 +52,30 @@ public class Dictionary {
 //            readDicFile(DictionaryServer.Filepath);
 //        }
 
-    public static void readDicFile(String filepath) throws IOException {
+    public static void readDicFile(String filepath) {
         DicFile = new HashMap<>();
         String encoding = "UTF-8"; //For a universal coding usage
         File file = new File(filepath);
         String rl;
-        InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding); //Read the dict via InputStream
-        BufferedReader bufferedReader = new BufferedReader(read);//Put the InputStream into a Buffer for readline()
-        while ((rl = bufferedReader.readLine()) != null) {//Read the buffer line by line
-            int KeyIndex = rl.indexOf(",");//找到第一个逗号的位置
-            if (KeyIndex == -1) {
-                throw new IOException("Illegal Dictionary File Format");
+        BufferedReader bufferedReader;
+        try {
+
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding); //Read the dict via InputStream
+            bufferedReader = new BufferedReader(read);
+            while ((rl = bufferedReader.readLine()) != null) {//Read the buffer line by line
+                int KeyIndex = rl.indexOf(",");//找到第一个逗号的位置
+                if (KeyIndex == -1) {
+                    throw new IOException("Illegal Dictionary File Format");
+                }
+                String Key = rl.substring(0, KeyIndex);//逗号前的为key
+                String Value = rl.substring(KeyIndex + 1);//逗号后的为value
+                DicFile.put(Key, Value);
             }
-            String Key = rl.substring(0, KeyIndex);//逗号前的为key
-            String Value = rl.substring(KeyIndex+1);//逗号后的为value
-            DicFile.put(Key, Value);
+            bufferedReader.close();
+        } catch (IOException e) {
+            System.out.println("Illegal Dictionary File Format");
+            System.exit(1);
         }
-        bufferedReader.close();
 
     }
 

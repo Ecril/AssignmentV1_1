@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -77,7 +78,8 @@ public class DictionaryServer {
 
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
 
-        try (ServerSocket server = factory.createServerSocket(port)) {
+        try {
+            ServerSocket server = factory.createServerSocket(port);
             //将文件加载到hashmap内存中
             Dictionary.readDicFile(Filepath);
 
@@ -97,6 +99,9 @@ public class DictionaryServer {
 
             }
 
+        } catch (BindException e) {
+            System.out.println("Address already in use");
+            System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,11 +109,11 @@ public class DictionaryServer {
     }
 
     private static void serveClient(Socket client) {
-        try (Socket clientSocket = client) {
+        try {
             // Input stream
-            DataInputStream input = new DataInputStream(clientSocket.getInputStream());
+            DataInputStream input = new DataInputStream(client.getInputStream());
             // Output Stream
-            DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
+            DataOutputStream output = new DataOutputStream(client.getOutputStream());
             String outcome;
             String Operation = input.readUTF();
 
@@ -143,8 +148,8 @@ public class DictionaryServer {
                     break;
 
                 default://其它一律认为为连接检测
-                    outcome = "Connection Success";
-                    System.out.println("New Connection Detected");
+                    outcome = "Connection Success\n";
+                    System.out.println("New Connection Detected\n");
             }
 
 
