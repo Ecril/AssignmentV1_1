@@ -1,3 +1,6 @@
-Dog 1.An animal. 2.It barks.
-Bolo SB
-Cat MeowMeowMeow
+Frog,GuaGuaGua
+Wechat,Shit
+Wechats,Shits
+Cat,Meow!
+Dog,1.An animal. 2.It barks.
+Bolo,dashabi

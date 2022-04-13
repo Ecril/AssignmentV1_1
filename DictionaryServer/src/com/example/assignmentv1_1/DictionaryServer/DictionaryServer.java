@@ -45,7 +45,7 @@ public class DictionaryServer {
                     }
                     //最后记得打开文件
                     file = new File(Filepath);
-                    //最好break
+                    //必须break
                     break;
                 case 2:
                     //解析端口号 第一个参数不是数字会抛NumberFormatException
@@ -78,6 +78,9 @@ public class DictionaryServer {
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
 
         try (ServerSocket server = factory.createServerSocket(port)) {
+            //将文件加载到hashmap内存中
+            Dictionary.readDicFile(Filepath);
+
             System.out.println("Listen on Port:" + port + ", Dictionary file is " + file.getCanonicalPath());
             System.out.println("Waiting for client connection-");
 
@@ -108,19 +111,10 @@ public class DictionaryServer {
             DataOutputStream output = new DataOutputStream(clientSocket.getOutputStream());
             String outcome;
             String Operation = input.readUTF();
-            if (Operation.equals("Connection Detection")) {
-                output.writeUTF("Success");
-                output.flush();
-                output.close();
-                input.close();
-                System.out.println("New Connection Detected");
-                return;
-            }
 
             System.out.println("CLIENT: " + Operation);
             char OP = Operation.charAt(Operation.indexOf("OP") + 2);
             System.out.println("Client's operation: " + OP);
-
 
             switch (OP) {
                 case ('0')://Search operation requested
@@ -185,11 +179,10 @@ public class DictionaryServer {
 
             //output.writeUTF("DictionaryServer: Hi Client "+counter+" !!!");
             output.writeUTF(outcome);
-
             output.flush();
             input.close();
             output.close();
-            System.out.println("The outcome: " + outcome + " has been sent back to the client!");
+//            System.out.println("The outcome: " + outcome + " has been sent back to the client!");
         } catch (IOException e) {
             e.printStackTrace();
         }
