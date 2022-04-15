@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class DictionaryServer {
-    static String Filepath = ".\\dict.txt";
+    static String Filepath = "dict.txt";
     // Declare the port number
     private static int port = 3005;
 
